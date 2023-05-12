@@ -16,7 +16,7 @@ public class Cuenta {
 
   public Cuenta() {
     saldo = 0;
-  }
+  }//ya esta predefinido, borrar uno de los dos
 
   public Cuenta(double montoInicial) {
     saldo = montoInicial;
@@ -31,18 +31,18 @@ public class Cuenta {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
 
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
+    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {//delegar el razonamiento en un metodo, para ser mas entedile
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
 
-    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
+    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);//mal delegacion
   }
 
   public void sacar(double cuanto) {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
-    if (getSaldo() - cuanto < 0) {
+    if (getSaldo() - cuanto < 0) {//usar la variable saldo
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
@@ -54,7 +54,7 @@ public class Cuenta {
     new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
   }
 
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
+  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {//es largo el constructor
     Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
     movimientos.add(movimiento);
   }

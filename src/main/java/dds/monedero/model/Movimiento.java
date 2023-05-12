@@ -26,11 +26,8 @@ public class Movimiento {
 
   public boolean fueDepositado(LocalDate fecha) {
     return isDeposito() && esDeLaFecha(fecha);
-  }
+  }//mismo codigo
 
-  public boolean fueExtraido(LocalDate fecha) {
-    return isExtraccion() && esDeLaFecha(fecha);
-  }
 
   public boolean esDeLaFecha(LocalDate fecha) {
     return this.fecha.equals(fecha);
@@ -39,15 +36,17 @@ public class Movimiento {
   public boolean isDeposito() {
     return esDeposito;
   }
+  //innecesario, podes simplemente preguntar por el valor de esDeposito
 
   public boolean isExtraccion() {
     return !esDeposito;
   }
+  // lo mismo, negas esDeposito, o como mucho negas la funcion anterior
 
   public void agregateA(Cuenta cuenta) {
     cuenta.setSaldo(calcularValor(cuenta));
     cuenta.agregarMovimiento(fecha, monto, esDeposito);
-  }
+  }// para hacer cosas sobre la cuenta, mejor llamarla a ella
 
   public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
@@ -55,5 +54,5 @@ public class Movimiento {
     } else {
       return cuenta.getSaldo() - getMonto();
     }
-  }
+  }// podes delegar la decision de sumar o restar el monto
 }
