@@ -22,8 +22,9 @@ public class Cuenta {
     saldo = montoInicial;
   }
 
-  public void setMovimientos(List<Movimiento> movimientos) {
-    this.movimientos = movimientos;
+  public void addMovimiento(Movimiento movimiento) {
+    movimientos.add(movimiento);
+    this.saldo = this.calcularValor(movimiento);
   }
 
   public void poner(double cuanto) {
@@ -31,14 +32,14 @@ public class Cuenta {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
 
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {//delegar el razonamiento en un metodo, para ser mas entedile
+    if (masDeTres()) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
 
-    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);//mal delegacion
+    addMovimiento(new Movimiento(LocalDate.now(), cuanto, true));
   }
 
-  public void sacar(double cuanto) {
+  public void sacar(double cuanto) {//siento que el metodo es muy largo, pero es duda, no certeza
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
@@ -51,13 +52,9 @@ public class Cuenta {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, límite: " + limite);
     }
-    new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
+    addMovimiento(new Movimiento(LocalDate.now(), cuanto, false));
   }
 
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {//es largo el constructor
-    Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
-    movimientos.add(movimiento);
-  }
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
@@ -78,4 +75,11 @@ public class Cuenta {
     this.saldo = saldo;
   }
 
+  private boolean masDeTres(){
+    return getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3;
+  }
+
+  public double calcularValor(Movimiento movimiento) {
+    return this.getSaldo() + (movimiento.isDeposito()? +movimiento.getMonto(): -movimiento.getMonto());
+  }
 }

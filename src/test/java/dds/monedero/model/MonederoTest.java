@@ -73,7 +73,7 @@ public class MonederoTest {
     Cuenta cuenta2 = new Cuenta();
     cuenta2.setSaldo(4000);
     movimiento = new Movimiento(LocalDate.now(),2000, false);
-    movimiento.agregateA(cuenta2);
+    cuenta2.addMovimiento(movimiento);
     assertEquals(2000, cuenta2.getSaldo());
   }
 
@@ -81,7 +81,7 @@ public class MonederoTest {
   public void consultarExtraccion(){
     movimiento = new Movimiento(LocalDate.now(),2000, false);
     assertFalse(movimiento.isDeposito());
-    assertTrue(movimiento.isExtraccion());
+    assertFalse(movimiento.isDeposito());
   }
 
   @Test
